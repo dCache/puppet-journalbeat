@@ -1,0 +1,18 @@
+name: <%= @hostname %>
+tags: [<% @journalbeat_Tags.each do |tag| %> "<%= tag %>", <% end %> "journald" ]
+
+journalbeat.inputs:
+- paths: [<% @journalbeat_Inputs_Paths.each do |path| %> "<%= path %>", <% end %>]
+  seek: <%= @journalbeat_Inputs_Seek %>
+  include_matches :
+    <% @journalbeat_Inputs_Include_matches.each do |include| %> - "<%= include %>" <% end %>
+
+output:
+<% @journalbeat_output.each do |service,service_info| -%>
+<%- indent = '  ' -%>
+<%= indent %><%= service -%>:
+<%= indent %><% service_info.each do |key,value| -%>
+<%= indent %><%= key -%>:
+<%= indent %><% value.each do |val| -%>
+<%= indent %>- <%= val %>
+<%= indent %><% end %> <% end %> <% end -%>
